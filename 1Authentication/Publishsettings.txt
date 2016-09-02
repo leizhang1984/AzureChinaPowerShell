@@ -1,0 +1,37 @@
+#如果在运行Azure PowerShell之后报错，错误信息为系统上禁止运行脚本，请在PowerShell中执行：
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+
+
+#本次介绍的是ASM模式登陆
+
+
+#请在Azure PowerShell 执行以下命令
+Get-AzurePublishSettingsFile -Environment AzureChinaCloud
+
+
+#在弹出的界面中，输入用户名和密码，然后把publishsettings的文件，保存到本地计算机
+
+
+#然后我们回到Azure PowerShell窗口，继续输入以下命令
+Import-AzurePublishSettingsFile <PathToFile>
+#PathToFile就是我们保存步骤4中扩展名为publishsettings的文件位置(文件路径+文件名)
+
+
+#这样，本地计算机就和Azure China建立了可靠安全的链接了。在不删除上传的Management Certificates情况下，下次运行Azure PowerShell将不必再次运行上面的运行。接下来可以运行我们的命令了。
+
+
+
+#设置订阅对应的存储账户
+Set-AzureSubscription -SubscriptionName '[SubscriptionName]' -CurrentStorageAccount '[StorageName]'
+
+
+#根据订阅名称，设置默认订阅
+Select-AzureSubscription -SubscriptionName "<SubscriptionName>" -Default
+#或者根据订阅ID，设置默认订阅
+Select-AzureSubscription -SubscriptionID "<SubscriptionID>" -Default
+
+
+#根据订阅名称，设置当前订阅
+Select-AzureSubscription -SubscriptionName "<SubscriptionName>" -Current
+#或者根据订阅ID，设置当前订阅
+Select-AzureSubscription -SubscriptionID "<SubscriptionID>" -Current

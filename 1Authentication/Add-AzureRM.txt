@@ -1,0 +1,17 @@
+#如果在运行Azure PowerShell之后报错，错误信息为系统上禁止运行脚本，请在PowerShell中执行：
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+
+
+#本次介绍的是Azure Resource Manager模式
+
+
+#请在Azure PowerShell 执行以下命令
+Add-AzureRmAccount -EnvironmentName AzureChinaCloud
+
+
+#在弹出的界面中，输入用户名和密码，则登陆通过
+#不过关闭PowerShell以后，下次要重新进行身份验证
+
+
+#设置当前订阅名称
+Select-AzureRmSubscription -SubscriptionName '[SubscriptionName]'| Select-AzureRmSubscription

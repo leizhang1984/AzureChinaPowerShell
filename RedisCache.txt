@@ -1,0 +1,26 @@
+Add-AzureRmAccount -EnvironmentName AzureChinaCloud
+#弹出界面输入用户名密码
+
+## admin@leizha.partner.onmschina.cn
+
+Select-AzureRmSubscription –SubscriptionName 'Internal Billing'| Select-AzureRmSubscription
+#设置当前订阅名称
+
+
+New-AzureRmResourceGroup -Name 'LeiResourceGroup' -Location 'China East'
+
+
+New-AzureRmRedisCache -ResourceGroupName 'LeiResourceGroup' -Name 'LeiRedisStandardC4' -Location 'China East' -sku Standard -Size C4
+
+
+New-AzureRmRedisCacheKey -ResourceGroupName 'LeiResourceGroup' -Name 'LeiRedisStandardC4'  -KeyType Primary
+
+
+New-AzureRmRedisCacheKey -ResourceGroupName 'LeiResourceGroup' -Name 'LeiRedisStandardC4'  -KeyType Secondary
+
+
+Set-AzureRmRedisCache -ResourceGroupName 'LeiResourceGroup' -Name 'LeiRedisStandardC4' -EnableNonSslPort $True
+
+
+redis-benchmark.exe -h LeiRedisStandardC4.redis.cache.chinacloudapi.cn -a 'zhyrMXIk4bJvIFU+W7d7jCd1x6juhn+top1r6WWZp50=' -c 100 -t get -P 10 -d 10 -q
+

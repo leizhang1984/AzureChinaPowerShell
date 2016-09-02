@@ -1,0 +1,28 @@
+#如果在运行Azure PowerShell之后报错，错误信息为系统上禁止运行脚本，请在PowerShell中执行：
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+
+
+#本次介绍的是ASM模式登陆
+
+
+#请在Azure PowerShell 执行以下命令
+Add-AzureAccount -Environment AzureChinaCloud
+
+
+#在弹出的界面中，输入用户名和密码，则登陆通过
+#不过关闭PowerShell以后，下次要重新进行身份验证
+
+#设置订阅对应的存储账户
+Set-AzureSubscription -SubscriptionName '[SubscriptionName]' -CurrentStorageAccount '[StorageName]'
+
+
+#根据订阅名称，设置默认订阅
+Select-AzureSubscription -SubscriptionName "<SubscriptionName>" -Default
+#或者根据订阅ID，设置默认订阅
+Select-AzureSubscription -SubscriptionID "<SubscriptionID>" -Default
+
+
+#根据订阅名称，设置当前订阅
+Select-AzureSubscription -SubscriptionName "<SubscriptionName>" -Current
+#或者根据订阅ID，设置当前订阅
+Select-AzureSubscription -SubscriptionID "<SubscriptionID>" -Current
