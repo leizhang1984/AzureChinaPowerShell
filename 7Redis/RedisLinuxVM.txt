@@ -1,0 +1,13 @@
+sudo su -
+
+cd /root/redis-3.0.7/src
+
+./redis-benchmark -h YourRedisDNS.redis.cache.chinacloudapi.cn -a YourRedisKey -c 1000 -t get -P 10 -d 10 -q
+
+./redis-cli -h YourRedisDNS.redis.cache.chinacloudapi.cn -p 6379 -a YourRedisKey
+
+
+cd d:
+d:
+
+redis-benchmark.exe -h YourRedisDNS.redis.cache.chinacloudapi.cn -a YourRedisKey -c 1000 -t get -P 10 -d 10 -q

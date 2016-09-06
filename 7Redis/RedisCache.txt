@@ -1,0 +1,55 @@
+#http://www.cnblogs.com/threestone/p/4858462.html
+Add-AzureRmAccount -EnvironmentName AzureChinaCloud
+#弹出界面输入用户名密码
+
+
+#设置当前订阅名称
+Select-AzureRmSubscription –SubscriptionName 'Internal Billing'| Select-AzureRmSubscription
+
+#在China East创建资源组
+New-AzureRmResourceGroup -Name 'LeiResourceGroup' -Location 'China East'
+
+#在China East创建Redis Cache, SKU为Standard，Size为C4
+New-AzureRmRedisCache -ResourceGroupName 'LeiResourceGroup' -Name 'LeiRedisStandardC4' -Location 'China East' -sku Standard -Size C4
+
+#重新生成Redis Cache的主访问密钥
+New-AzureRmRedisCacheKey -ResourceGroupName 'LeiResourceGroup' -Name 'LeiRedisStandardC4'  -KeyType Primary
+
+#重新生成Redis Cache的辅助访问密钥
+New-AzureRmRedisCacheKey -ResourceGroupName 'LeiResourceGroup' -Name 'LeiRedisStandardC4'  -KeyType Secondary
+
+#重新设置Redis Cache大小，为C6
+Set-AzureRmRedisCache -ResourceGroupName 'LeiResourceGroup' -Name 'LeiRedisStandardC4' -Size C6
+
+#关闭Redis Cache的SSL
+Set-AzureRmRedisCache -ResourceGroupName 'LeiResourceGroup' -Name 'LeiRedisStandardC4' -EnableNonSslPort $True
+
+#删除Redis Cache
+Remove-AzureRmRedisCache -ResourceGroupName 'LeiResourceGroup' -Name 'LeiRedisStandardC4'  -Force
+
+
+
+
+#http://www.cnblogs.com/threestone/p/5249977.html
+
+
+#创建新的P1级别的Azure Redis Cache
+#注意下面的参数中，"rdb-backup-enabled" = "true"表示启用备份
+#"rdb-backup-frequency" = "15"表示备份最低频率为15分钟
+#AccountName为存储账号的名称，我们这里设置为leiredisstorage
+#AccountKey为存储账号的密钥
+
+New-AzureRmRedisCache -ResourceGroupName 'LeiResourceGroup' -Name 'LeiPRedis' -Location 'China East' -sku Premium -Size P1 -RedisConfiguration @{"rdb-backup-enabled" = "true"; "rdb-backup-frequency" = "15"; "rdb-backup-max-snapshot-count" = "1"; "rdb-storage-connection-string" = "DefaultEndpointsProtocol=https;AccountName=leiredisstorage;AccountKey=[YourAccountKey];EndpointSuffix=core.chinacloudapi.cn;"} 
+
+
+
+
+#使用Premiun Azure Redis Cache，将Redis Cache加入到Virtual Network虚拟机网络中，获得内网IP地址
+#创建新的P1级别的Azure Redis Cache
+#-VirtualNetwork中的/subscriptions/后的内容，为该订阅的订阅ID
+#-ShardCount 表示Cluster数量
+#加入到之前创建的Virtual Network，名称为LeiTestVNet
+#加入到子网Subnet-1中
+#设置改Redis Cache的内网IP为10.0.0.100
+
+New-AzureRmRedisCache -ResourceGroupName 'LeiResourceGroup' -Name LeiPRedis -Location 'China East' -sku Premium -Size P1 -ShardCount 1 -VirtualNetwork /subscriptions/e2eaa986-29d9-48c9-8302-1e2900a4504b/resourceGroups/Default-Networking/providers/Microsoft.ClassicNetwork/virtualNetworks/LeiTestVNet -Subnet Subnet-1 -StaticIP '10.0.0.100'

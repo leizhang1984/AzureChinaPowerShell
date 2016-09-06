@@ -1,0 +1,74 @@
+##########################
+#本文介绍的是ASM Virtual Machine
+##########################
+
+#在弹出的界面中，输入Azure用户名和密码
+Add-AzureAccount -Environment AzureChinaCloud
+
+
+#选择当前订阅ID
+Select-AzureSubscription -SubscriptionId [SubscriptionId] -current
+
+
+#显示所有的Azure VM Template Name
+$images = Get-AzureVMImage
+$count = $images.Count
+for($i=0;$i -lt $count;$i++){ $i.ToString() + " : " + $images[$i].ImageName; }
+
+
+
+#绑定公网IP地址，VIP
+#Location，可以根据VM所在的数据中心，选择China East或者China North
+New-AzureReservedIP -ServiceName '[YourDNSName]' -ReservedIPName '[YourReservedIPName]' -Location 'China East'
+
+
+
+#修改虚拟机所在的虚拟网络的Subnet
+#虚拟机必须首先加入虚拟网络
+Get-AzureVM –ServiceName '[YourDNSName]' -Name '[YourVMName]' | Set-AzureSubnet -SubnetNames '[SubnetName]' | Update-AzureVM
+
+
+
+#绑定内网IP地址，DIP
+#DIP必须是在虚拟网络里的，某个Subnet的，有效IP地址
+#执行该PowerShell后，虚拟机会Reboot
+Get-AzureVM -ServiceName '[YourDNSName]' -Name '[YourVMName]' | Set-AzureStaticVNetIP -IPAddress [YourDIP] | Update-AzureVM
+
+
+
+#设置PIP，同一个DNS下的DNS不同VM，PIP不同
+#当我们使用Azure PIP的时候，所有的请求直接发送到Azure VM，不经过Azure 负载均衡器。因此，Azure PIP不需要配置Endpoint，所有的Endpoint是直接暴露在Internet上的。从安全性角度考虑，我们需要非常仔细的配置Azure VM的防火墙规则。
+#ASM PIP 不能固定
+Get-AzureVM -ServiceName '[YourDNSName]' -Name '[YourVMName]' | Set-AzurePublicIP -PublicIPName '[YourPIPName]' | Update-AzureVM
+
+
+
+#查看该PIP信息
+$instance = Get-AzureVM -ServiceName '[YourDNSName]' -Name '[YourVMName]' 
+$instance.PublicIPAddress   
+
+
+#删除PIP
+Get-AzureVM -ServiceName '[YourDNSName]' -Name '[YourVMName]' | Remove-AzurePublicIP | Update-AzureVM
+
+
+#关闭虚拟机，关闭后虚拟机状态为Stop(Dellocated)，不再计费，但是MAC地址会改变
+Stop-AzureVM -ServiceName '[YourDNSName]' -Name '[YourVMName]' -Force
+
+
+#设置负载均衡器规则为SourceIP
+#http://www.cnblogs.com/threestone/p/4378472.html
+#查看当前虚拟机的负载均衡器情况
+Get-AzureVM -ServiceName '[YourDNSName]' -Name '[YourVMName]' | Get-AzureEndpoint
+
+#重新设置Azure Load Balancer规则为sourceIP
+Set-AzureLoadBalancedEndpoint -ServiceName '[YourDNSName]' -LBSetName '[YourLBSetName]' -Protocol tcp -LocalPort 80 -ProbeProtocolTCP -ProbePort 80 –LoadBalancerDistribution 'sourceIP'
+
+
+#查看更新后的Load Balancer规则
+Get-AzureVM -ServiceName '[YourDNSName]' -Name '[YourVMName]' | Get-AzureEndpoint
+
+#如果要改回默认的负载均衡器规则，请设置LoadBalancerDistribution为none
+Set-AzureLoadBalancedEndpoint -ServiceName '[YourDNSName]' -LBSetName '[YourLBSetName]' -Protocol tcp -LocalPort 80 -ProbeProtocolTCP -ProbePort 80 –LoadBalancerDistribution 'none'
+
+

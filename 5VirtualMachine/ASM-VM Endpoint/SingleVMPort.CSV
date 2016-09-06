@@ -1,0 +1,4 @@
+ServiceName,VMName,Protocol,LocalPort,PublicPort,PortName
+leiazure,LeiAzureVM001,TCP,1596,1596,tcp1596
+leiazure,LeiAzureVM001,TCP,1597,1597,tcp1597
+leiazure,LeiAzureVM001,TCP,1598,1598,tcp1598

@@ -1,0 +1,87 @@
+#http://www.cnblogs.com/threestone/p/4860660.html
+
+#单个Premium Storage Account最大容量为32TB
+#Azure限制了DS VM到Premium Storage的网络带宽
+#DS系列的VM可以同时使用Premium Storage和标准存储(Standard Storage)
+#Premium Storage按照磁盘分配的最大容量计费
+
+
+#请在Azure PowerShell 执行以下命令
+Add-AzureAccount -Environment AzureChinaCloud
+#在弹出的界面中，输入用户名和密码，则登陆通过
+
+
+#选择当前的订阅
+Select-AzureSubscription '[SubscriptionName]' –Current
+
+#在中国东部创建Premium Storage
+#如果需要在北京创建，Location设置为China North
+New-AzureStorageAccount -StorageAccountName '[YourPremiumAccount]' -Location 'China East' -Type 'Premium_LRS' 
+
+#创建新的DS VM，VM Size为DS2
+$storageAccount = "yourpremiumaccount"
+$adminName = "youradmin"
+$adminPassword = "yourpassword"
+$vmName ="yourVM"
+$location = "China East"
+$imageName = "a699494373c04fc0bc8f2bb1389d6106__Windows-Server-2012-R2-201409.01-en.us-127GB.vhd"
+$vmSize ="Standard_DS2"
+$OSDiskPath = "https://" + $storageAccount + ".blob.core.chinacloudapi.cn/vhds/" + $vmName + "_OS_PIO.vhd"
+$vm = New-AzureVMConfig -Name $vmName -ImageName $imageName -InstanceSize $vmSize -MediaLocation $OSDiskPath
+Add-AzureProvisioningConfig -Windows -VM $vm -AdminUsername $adminName -Password $adminPassword
+New-AzureVM -ServiceName $vmName -VMs $VM -Location $location
+
+
+
+
+
+
+#创建虚拟机，并加入虚拟网络
+$storageAccount = "yourpremiumstorage" 
+$adminName = "yourusername"
+$adminPassword = "yourpassword"
+$vmName =  "yourvmname"
+ 
+$location =  "China East"
+$imageName = "f1179221e23b4dbb89e39d70e5bc9e72__OpenLogic-CentOS-67-20160415"
+$vmSize = "Standard_DS13"
+ 
+$vnet = "yourvnetname"
+$ipaddr= "privateip"
+ 
+$subnet = "subnetname"
+$csname = "yourcloudservicename"
+
+New-AzureService -ServiceName $csname  -Location $location -Label demo 
+# Create the VM
+$OSDiskPath = "https://" + $storageAccount + ".blob.core.chinacloudapi.cn/vhds/" + $vmName + "_OS_PIO.vhd"
+$vm = New-AzureVMConfig -Name $vmName -ImageName $imageName -InstanceSize $vmSize -MediaLocation $OSDiskPath
+Add-AzureProvisioningConfig -VM $vm -Linux -LinuxUser $adminName -Password $adminPassword
+Set-AzureSubnet -SubnetNames $subnet -VM $vm
+Set-AzureStaticVNetIP -IPAddress $ipaddr -VM $vm
+New-AzureVM -ServiceName  $csname -VMs $VM -VNetName $vnet
+
+
+
+
+
+#在创建的DS VM上挂载新的数据磁盘，容量为128GB
+$storageAccount = "yourpremiumaccount"
+$vmName ="yourVM"
+$vm = Get-AzureVM -ServiceName $vmName -Name $vmName
+$LunNo = 1
+$path = "http://" + $storageAccount + ".blob.core.chinacloudapi.cn/vhds/" + "myDataDisk_" + $LunNo + "_PIO.vhd"
+$label = "Disk " + $LunNo
+Add-AzureDataDisk -CreateNew -MediaLocation $path -DiskSizeInGB 128 -DiskLabel $label -LUN $LunNo -HostCaching ReadOnly -VM $vm | Update-AzureVm
+
+
+
+
+
+#修改DS VM Size
+Get-AzureVM –ServiceName '[YourDNSName]' –Name '[VMName]' | Set-AzureVMSize '[VMSize]' | Update-AzureVM
+
+#我们以DB-CS-A为例，设置大小为Standard_DS4，该命令为
+Get-AzureVM –ServiceName 'uladvdb' –Name 'DB-CS-A' | Set-AzureVMSize 'Standard_DS4' | Update-AzureVM
+#注意，运行上述命令修改VM Size后，该VM会重启。请确认把虚拟机一台一台重启，不要同时重启造成服务宕机
+

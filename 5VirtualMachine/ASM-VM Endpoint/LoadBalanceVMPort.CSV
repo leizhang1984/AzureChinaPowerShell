@@ -1,0 +1,7 @@
+ServiceName,VMName,Protocol,LocalPort,PublicPort,PortName,ProbePort,ProbeProtocol,LBSetName,ProbePath
+leiazure,LeiAzureVM001,TCP,1596,1596,tcp1596,1596,http,LB-1596,/
+leiazure,LeiAzureVM001,TCP,1597,1597,tcp1597,1597,http,LB-1597,/
+leiazure,LeiAzureVM001,TCP,1598,1598,tcp1598,1598,http,LB-1598,/
+leiazure,LeiAzureVM002,TCP,1596,1596,tcp1596,1596,http,LB-1596,/
+leiazure,LeiAzureVM002,TCP,1597,1597,tcp1597,1597,http,LB-1597,/
+leiazure,LeiAzureVM002,TCP,1598,1598,tcp1598,1598,http,LB-1598,/
