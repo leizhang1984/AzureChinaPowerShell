@@ -1,7 +1,0 @@
-https://leivms.blob.core.chinacloudapi.cn/vhds/LeiASMWeb-LeiASMWeb01-2016-12-05.vhd
-
-AzCopy /Source:https://leivms.blob.core.chinacloudapi.cn/vhds /Dest:https://leiarmstorage.blob.core.chinacloudapi.cn/vhds /SourceKey:QZBdJyiXODv9hWhymPZEep1TNd9TQ7vH3+Ysxl1zmgo7HsPX846zFZ5xsTDKlbYCQkEosEdCOEoa8iPq4BxLlw== /DestKey:XWLYHSgTB8FJ3BdqvCsydHZ+6k87StBc+IreChH8Lggq5ozg7uILXHoepaY+sC2vZod488sq8C4iZqiW50U/Eg== /Pattern:LeiASMWeb-LeiASMWeb01-2016-12-05.vhd
-
-
-
-AzCopy /Source:https://leivms.blob.core.chinacloudapi.cn/vhds /Dest:https://leiarmstorage.blob.core.chinacloudapi.cn/vhds /SourceKey:QZBdJyiXODv9hWhymPZEep1TNd9TQ7vH3+Ysxl1zmgo7HsPX846zFZ5xsTDKlbYCQkEosEdCOEoa8iPq4BxLlw== /DestKey:XWLYHSgTB8FJ3BdqvCsydHZ+6k87StBc+IreChH8Lggq5ozg7uILXHoepaY+sC2vZod488sq8C4iZqiW50U/Eg== /Pattern:LeiASMWeb01-LeiASMWeb01-1128-1.vhd
