@@ -1,0 +1,15 @@
+#Login Azure China Cloud
+Write-Host "Logging in...";
+Add-AzureRmAccount -EnvironmentName AzureChinaCloud;
+
+# Ñ¡ÔñAzure China ¶©ÔÄID
+Select-AzureRmSubscription -SubscriptionID 'fa02e842-5d77-4a05-9089-7ce3fdb786e0'
+
+New-AzureRmResourceGroupDeployment -Name ExampleDeployment -ResourceGroupName LeiARMRG -Mode Incremental -TemplateFile 'D:\vmforuserimage\azuredeploy.json' -TemplateParameterFile 'D:\vmforuserimage\azuredeploy.parameters.json'
+
+LeiASMWeb
+LeiASMWeb01
+leizhang
+Zhanglei520
+
+139.219.185.178/customklayip2.chinaeast.cloudapp.chinacloudapi.cn

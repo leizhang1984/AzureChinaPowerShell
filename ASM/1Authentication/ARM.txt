@@ -27,3 +27,21 @@ foreach($Sub in $Subs)
    $subName =  $sub.SubscriptionName
    Write-Host "`t Subscription Name = $subName  " -ForegroundColor Green
 }
+
+
+#####################################################
+#This is For Azure China
+
+$userName = "[YourUserName]"
+$securePassword = ConvertTo-SecureString -String "[YourPassword]" -AsPlainText -Force
+ 
+$cred = New-Object System.Management.Automation.PSCredential($userName, $securePassword)
+Add-AzureAccount -Credential $cred -Environment AzureChinaCloud
+Get-AzureSubscription
+
+
+######################To switch to the AzureResourceManager module, use Switch-AzureMode
+Switch-AzureMode -Name AzureResourceManager
+
+######################To switch to the Azure module, use Switch-AzureMode again.
+Switch-AzureMode -Name AzureServiceManagement

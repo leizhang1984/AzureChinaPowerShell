@@ -6,19 +6,11 @@ Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 #######################################################
 
 #请在Azure PowerShell 执行以下命令
-Get-AzurePublishSettingsFile -Environment AzureChinaCloud
+Add-AzureAccount -Environment AzureChinaCloud
 
 
-#在弹出的界面中，输入用户名和密码，然后把publishsettings的文件，保存到本地计算机
-
-
-#然后我们回到Azure PowerShell窗口，继续输入以下命令
-Import-AzurePublishSettingsFile <PathToFile>
-#PathToFile就是我们保存步骤4中扩展名为publishsettings的文件位置(文件路径+文件名)
-
-
-#这样，本地计算机就和Azure China建立了可靠安全的链接了。在不删除上传的Management Certificates情况下，下次运行Azure PowerShell将不必再次运行上面的运行。接下来可以运行我们的命令了。
-
+#在弹出的界面中，输入用户名和密码，则登陆通过
+#不过关闭PowerShell以后，下次要重新进行身份验证
 
 #设置订阅对应的存储账户
 Set-AzureSubscription -SubscriptionName '[SubscriptionName]' -CurrentStorageAccount '[StorageName]'
@@ -46,3 +38,21 @@ foreach($Sub in $Subs)
    $subName =  $sub.SubscriptionName
    Write-Host "`t Subscription Name = $subName  " -ForegroundColor Green
 }
+
+
+#####################################################
+#This is For Azure China
+
+$userName = "[YourUserName]"
+$securePassword = ConvertTo-SecureString -String "[YourPassword]" -AsPlainText -Force
+ 
+$cred = New-Object System.Management.Automation.PSCredential($userName, $securePassword)
+Add-AzureAccount -Credential $cred -Environment AzureChinaCloud
+Get-AzureSubscription
+
+
+######################To switch to the AzureResourceManager module, use Switch-AzureMode
+Switch-AzureMode -Name AzureResourceManager
+
+######################To switch to the Azure module, use Switch-AzureMode again.
+Switch-AzureMode -Name AzureServiceManagement

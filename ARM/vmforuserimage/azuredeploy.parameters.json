@@ -1,0 +1,49 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "customVmName": {
+      "value": "LeiARMWeb01"
+    },
+    "userImageStorageAccountName": {
+      "value": "leiarmstorage"
+    },
+    "userImageStorageAccountResourceGroupName": {
+      "value": "LeiARMRG"
+    },
+	"osDiskVhdUri": {
+      "value": "https://leiarmstorage.blob.core.chinacloudapi.cn/vhds/LeiASMWeb-LeiASMWeb01-2016-12-05.vhd"
+    },
+	//dnsLabelPrefix必须为小写
+	"dnsLabelPrefix": {
+      "value": "customdns"
+    },
+    "adminUsername": {
+      "value": "azureadmin"
+    },
+    "adminPassword": {
+      "value": "MyVM@123456"
+    },
+    "osType": {
+      "value": "Windows"
+    },
+    "vmSize": {
+      "value": "Standard_D2"
+    },
+	"availabilitySets_name": {
+      "value": "Web_AvbSet"
+    },
+    "newOrExistingVnet": {
+      "value": "existing"
+    },
+    "newOrExistingVnetName": {
+      "value": "LeiARMVNet"
+    },
+    "newOrExistingSubnetName": {
+      "value": "subnet-1"
+    },
+    "existingVnetResourceGroupName": {
+      "value": "LeiARMRG"
+    }
+  }
+}
