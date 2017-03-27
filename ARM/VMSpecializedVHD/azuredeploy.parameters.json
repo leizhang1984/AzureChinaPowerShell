@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "dnsNameForPublicIP": {
+            //必须为小写
+            "value": "leiarmvmpublicip"
+        },
+        "existingVirtualNetworkName": {
+            //虚拟网络名称
+            "value": "LeiARMVNet"
+        },
+        "existingVirtualNetworkResourceGroup": {
+            //Resource Group名称
+            "value": "LeiARMRG"
+        },
+        "subnetName": {
+            //ARM 模式下，虚拟网络子网名称
+            "value": "subnet-1"
+        },
+
+        "osDiskVhdUri": {
+            //操作系统的VHD文件
+            "value": "https://leiarmstorage.blob.core.chinacloudapi.cn/vhds/LeiASMWeb01-LeiASMWeb01-2017-03-27.vhd"
+        },
+        "vmName": {
+            //虚拟机名称
+           "value": "LeiARMVMWeb01"
+        },
+        "osType": {
+            //操作系统类型
+            "value": "Windows"
+        },
+        "vmSize": {
+            //虚拟机实例大小
+            "value": "Standard_D1_V2"
+        },
+        "diagStorageAccountName":{
+            //diag 用的Storage Account Name，必须为小写
+            //可以与osDiskVhdUri所在的Storage Account Name相同
+             "value": "leiarmstoragediag"
+        },
+         "availabilitySetName":{
+            //高可用集名称
+             "value": "Web-AvbSet"
+        }
+    }
+}

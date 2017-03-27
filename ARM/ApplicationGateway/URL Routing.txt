@@ -1,0 +1,70 @@
+#在弹出窗口登录
+Login-AzureRmAccount -EnvironmentName AzureChinaCloud
+
+#选择订阅信息
+Select-AzureRmSubscription -SubscriptionName "Training"
+
+#先手动创建Resource Group，这里设置Resource Group
+$resourcegroupname = 'LeiAppGWRG'
+
+#手动创建Virtual Network
+#同之前的文档一样，这个Virtual Network必须要有2个Subnet
+$virtualnetworkname= 'LeiAppGatewayVNet'
+
+#设置Application Gateway名称
+$appgatewayname = 'LeiAppGateway'
+
+#设置Application Gateway公网IP地址
+$publicipname = 'LeiAppGatewayPublicIP'
+
+#Application Gateway 所在的数据中心
+$location= 'China East'
+
+#设置端口号
+$port=80
+
+$vnet=Get-AzureRmVirtualNetwork -name $virtualnetworkname -ResourceGroupName $resourcegroupname
+
+#Application Gateway加入到第2个Subnet里
+$subnet=$vnet.Subnets[1]
+
+$publicip = New-AzureRmPublicIpAddress -ResourceGroupName $resourcegroupname -name $publicipname -location $location -AllocationMethod Dynamic
+
+#Create Application Gateway
+$gipconfig = New-AzureRmApplicationGatewayIPConfiguration -Name LeiAppGatewayPublicIP -Subnet $subnet
+
+#设置Backend Pool 1
+$pool1 = New-AzureRmApplicationGatewayBackendAddressPool -Name imagesBackendPool -BackendIPAddresses 10.0.0.4,10.0.0.5
+
+#设置Backend Pool 2
+$pool2 = New-AzureRmApplicationGatewayBackendAddressPool -Name videosBackendPool -BackendIPAddresses 10.0.0.11,10.0.0.12
+
+#设置Backend Pool 1的会话保持，不保持会话
+$poolSetting01 = New-AzureRmApplicationGatewayBackendHttpSettings -Name "imagesSetting" -Port $port -Protocol Http -CookieBasedAffinity Disabled -RequestTimeout 120
+
+#设置Backend Pool 2的会话保持，为保持会话
+$poolSetting02 = New-AzureRmApplicationGatewayBackendHttpSettings -Name "videosSetting" -Port $port -Protocol Http -CookieBasedAffinity Enabled -RequestTimeout 240
+
+$fipconfig01 = New-AzureRmApplicationGatewayFrontendIPConfig -Name "frontend1" -PublicIPAddress $publicip
+
+$fp01 = New-AzureRmApplicationGatewayFrontendPort -Name "fep01" -Port $port
+
+$listener = New-AzureRmApplicationGatewayHttpListener -Name "listener01" -Protocol Http -FrontendIPConfiguration $fipconfig01 -FrontendPort $fp01
+
+#设置URL Route，为/images/*
+$imagePathRule = New-AzureRmApplicationGatewayPathRuleConfig -Name "pathrule1" -Paths "/images/*" -BackendAddressPool $pool1 -BackendHttpSettings $poolSetting01
+
+#设置URL Route，为/videos/*
+$videoPathRule = New-AzureRmApplicationGatewayPathRuleConfig -Name "pathrule2" -Paths "/videos/*" -BackendAddressPool $pool2 -BackendHttpSettings $poolSetting02
+
+#设置DefaultBackendAddressPool
+$urlPathMap = New-AzureRmApplicationGatewayUrlPathMapConfig -Name "urlpathmap" -PathRules $videoPathRule, $imagePathRule -DefaultBackendAddressPool $pool1 -DefaultBackendHttpSettings $poolSetting02
+
+$rule01 = New-AzureRmApplicationGatewayRequestRoutingRule -Name "rule1" -RuleType PathBasedRouting -HttpListener $listener -UrlPathMap $urlPathMap
+
+#设置Application Gateway Size为Small，实例个数为1个
+$sku = New-AzureRmApplicationGatewaySku -Name "Standard_Small" -Tier Standard -Capacity 1
+
+#开始创建Application Gateway
+$appgw = New-AzureRmApplicationGateway -Name $appgatewayname -ResourceGroupName $resourcegroupname  -Location $location -BackendAddressPools $pool1,$pool2 -BackendHttpSettingsCollection $poolSetting01, $poolSetting02 -FrontendIpConfigurations $fipconfig01 -GatewayIpConfigurations $gipconfig -FrontendPorts $fp01 -HttpListeners $listener -UrlPathMaps $urlPathMap -RequestRoutingRules $rule01 -Sku $sku
+
