@@ -1,3 +1,4 @@
+#ASM
 Add-AzureAccount -Environment AzureChinaCloud
 
 $SubscriptionNames = Get-AzureSubscription | select -ExpandProperty SubscriptionName 
@@ -40,8 +41,8 @@ foreach ($sub in $SubscriptionNames)
 			}
 			else
 			{
-				#VM
-				$VMType="Virtual Machine";
+				#Classic VM
+				$VMType="Classic Virtual Machine";
 	
                 $vm = Get-AzureVM -ServiceName $ServiceName -Name $InstanceList.InstanceName 
                 $endpoints = Get-AzureVM -ServiceName $vm.ServiceName -Name $vm.Name|Get-AzureEndpoint
@@ -66,7 +67,17 @@ foreach ($sub in $SubscriptionNames)
 			}
 		}
 	}
+	
+	
+	
 }
+
+
+#ARM
+Add-AzureRmAccount -EnvironmentName AzureChinaCloud
+
+
+
 
 $result | Export-Csv C:\vmlist.csv -NoTypeInformation
 '导出虚拟机信息完成'
