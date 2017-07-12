@@ -17,11 +17,17 @@ foreach ($sub in $SubscriptionNames)
         {
             #Get Azure ARM VM NICs
             $NicsCount = $vm.NetworkProfile.NetworkInterfaces.Count
+
+            #Get VM Status
+            $vmstatus = (get-azurermvm -ResourceGroupName $vm.ResourceGroupName -Name $vm.Name -Status).Statuses.DisplayStatus[1]
+
             for($i=0; $i -lt $NicsCount; $i++)
             {
                 $NiCs = Get-AzureRmNetworkInterface | Where { $_.Id -eq $vm.NetworkProfile.NetworkInterfaces[$i].Id}
+                $NSGId = $NiCs.NetworkSecurityGroup
 
-                $NSGs =  Get-AzureRmNetworkSecurityGroup -ResourceGroupName $vm.ResourceGroupName | Where { $_.NetworkInterfaces[$i].Id -eq $NiCs.Id } 
+                $NSGs =  Get-AzureRmNetworkSecurityGroup -ResourceGroupName $vm.ResourceGroupName | Where { $_.Id -eq $NSGId} 
+
                 if($NSGs)
                 {
                         # NSG Existing then display
@@ -32,7 +38,8 @@ foreach ($sub in $SubscriptionNames)
                                 $output | add-member -Membertype NoteProperty -Name "Mode" -value "ARM"
                                 $output | add-member -Membertype NoteProperty -Name "SubscriptioName" -value "$($sub.Name)"
                                 $output | add-member -Membertype NoteProperty -Name "ResourceGroupName" -value "$($vm.ResourceGroupName)"
-                                $output | add-member -Membertype NoteProperty -Name "VMName" -value "$($vm.name)"
+                                $output | add-member -Membertype NoteProperty -Name "VMName" -value "$($vm.Name)"
+                                $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
                                 $output | add-member -Membertype NoteProperty -Name "NICName" -value "$($NiCs.name)"
 
                                 $output | add-member -Membertype NoteProperty -Name "PortName" -value "$($Rule.Name)"
@@ -44,17 +51,19 @@ foreach ($sub in $SubscriptionNames)
                                 $output | add-member -Membertype NoteProperty -Name "Description" -value  "$($Rule.Description)"
                                 $output | add-member -Membertype NoteProperty -Name "Permission" -value "$($Rule.Access)"
 
-                                $logarray += $output #add the current machinename, port and ACL to the array.
+                                $logarray += $output 
+                                #add the current machinename, port and ACL to the array.
                         }
                 }
                 else
                 {
-                        # NSG is not Exising, then warning
+                            # NSG is not Exising, then warning
                             $output = new-object PSObject
                             $output | add-member -Membertype NoteProperty -Name "Mode" -value "ARM"
                             $output | add-member -Membertype NoteProperty -Name "SubscriptioName" -value "$($sub.Name)"
                             $output | add-member -Membertype NoteProperty -Name "ResourceGroupName" -value "$($vm.ResourceGroupName)"
                             $output | add-member -Membertype NoteProperty -Name "VMName" -value "$($vm.name)"
+                            $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
                             $output | add-member -Membertype NoteProperty -Name "NICName" -value "$($NiCs.name)"
 
                             $output | add-member -Membertype NoteProperty -Name "PortName" -value "*"
@@ -66,7 +75,8 @@ foreach ($sub in $SubscriptionNames)
                             $output | add-member -Membertype NoteProperty -Name "Description" -value  "Open NSG to All Source IP"
                             $output | add-member -Membertype NoteProperty -Name "Permission" -value "permit"
 
-                            $logarray += $output #add the current machinename, port and ACL to the array.
+                            $logarray += $output 
+                            #add the current machinename, port and ACL to the array.
                 }
             }
         }
@@ -75,7 +85,7 @@ foreach ($sub in $SubscriptionNames)
 
 
 #For ASM Mode
-Add-AzureAccount -Environment AzureChinaCloud
+#Add-AzureAccount -Environment AzureChinaCloud
 
 $SubscriptionNames = Get-AzureSubscription | select -ExpandProperty SubscriptionName 
 
@@ -99,6 +109,9 @@ foreach ($sub in $SubscriptionNames)
         #Number of ACL rules
         $AclLength = $acl.Rules.Count
 
+        #Get VM Status
+        $vmstatus = $vm.status
+
         #Walk through the endpoints
         for($i=0; $i -lt $PortLength; $i++)
         {
@@ -110,6 +123,7 @@ foreach ($sub in $SubscriptionNames)
                 $output | add-member -Membertype NoteProperty -Name "SubscriptioName" -value $sub
                 $output | add-member -Membertype NoteProperty -Name "ResourceGroupName" -value "ASM Default Resource Group"
                 $output | add-member -Membertype NoteProperty -Name "VMName" -value "$($vm.name)"
+                $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
                 $output | add-member -Membertype NoteProperty -Name "NICName" -value "ASM Default NIC"
 
                 $output | add-member -Membertype NoteProperty -Name "PortName" -value "$($port[$i].name)"
@@ -132,6 +146,7 @@ foreach ($sub in $SubscriptionNames)
                 $output | add-member -Membertype NoteProperty -Name "SubscriptioName" -value $sub
                 $output | add-member -Membertype NoteProperty -Name "ResourceGroupName" -value "ASM Default Resource Group"
                 $output | add-member -Membertype NoteProperty -Name "VMName" -value "$($vm.name)"
+                $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
                 $output | add-member -Membertype NoteProperty -Name "NICName" -value "ASM Default NIC"
 
                 $output | add-member -Membertype NoteProperty -Name "PortName" -value "$($port[$i].name)"
