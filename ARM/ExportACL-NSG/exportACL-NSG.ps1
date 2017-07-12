@@ -12,6 +12,8 @@ foreach ($sub in $SubscriptionNames)
 {
         Select-AzureRMSubscription -SubscriptionName $sub.Name 
 
+        Write-Output "Processing " $sub.Name 
+
         $vmlist = Get-AzureRMVM
         foreach ($vm in $vmlist)
         {
@@ -24,7 +26,8 @@ foreach ($sub in $SubscriptionNames)
             for($i=0; $i -lt $NicsCount; $i++)
             {
                 $NiCs = Get-AzureRmNetworkInterface | Where { $_.Id -eq $vm.NetworkProfile.NetworkInterfaces[$i].Id}
-                $NSGId = $NiCs.NetworkSecurityGroup
+
+                $NSGId = $NiCs.NetworkSecurityGroup.Id
 
                 $NSGs =  Get-AzureRmNetworkSecurityGroup -ResourceGroupName $vm.ResourceGroupName | Where { $_.Id -eq $NSGId} 
 
@@ -82,16 +85,18 @@ foreach ($sub in $SubscriptionNames)
         }
 }
 
-
+Write-Output "ARM is Done, prepare for ASM"
 
 #For ASM Mode
-#Add-AzureAccount -Environment AzureChinaCloud
+Add-AzureAccount -Environment AzureChinaCloud
 
-$SubscriptionNames = Get-AzureSubscription | select -ExpandProperty SubscriptionName 
+$SubscriptionNames = Get-AzureSubscription
 
 foreach ($sub in $SubscriptionNames)
 { 
-    Select-AzureSubscription -SubscriptionName $sub -Current
+    Select-AzureSubscription -SubscriptionName $sub.SubscriptionName -Current
+
+    Write-Output "Processing " $sub.SubscriptionName
 
     $vmlist = get-azureVM 
 
@@ -120,7 +125,7 @@ foreach ($sub in $SubscriptionNames)
             {
                 $output = new-object PSObject
                 $output | add-member -Membertype NoteProperty -Name "Mode" -value "ASM"
-                $output | add-member -Membertype NoteProperty -Name "SubscriptioName" -value $sub
+                $output | add-member -Membertype NoteProperty -Name "SubscriptioName" -value $sub.SubscriptionName
                 $output | add-member -Membertype NoteProperty -Name "ResourceGroupName" -value "ASM Default Resource Group"
                 $output | add-member -Membertype NoteProperty -Name "VMName" -value "$($vm.name)"
                 $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
@@ -143,7 +148,7 @@ foreach ($sub in $SubscriptionNames)
             {
                 $output = new-object PSObject
                 $output | add-member -Membertype NoteProperty -Name "Mode" -value "ASM"
-                $output | add-member -Membertype NoteProperty -Name "SubscriptioName" -value $sub
+                $output | add-member -Membertype NoteProperty -Name "SubscriptioName" -value $sub.SubscriptionName
                 $output | add-member -Membertype NoteProperty -Name "ResourceGroupName" -value "ASM Default Resource Group"
                 $output | add-member -Membertype NoteProperty -Name "VMName" -value "$($vm.name)"
                 $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
