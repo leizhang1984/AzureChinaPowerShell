@@ -51,6 +51,12 @@ Add-AzureAccount -Credential $cred -Environment AzureChinaCloud
 Get-AzureSubscription
 
 
+
+
+
+
+#Switch Azure Module is retired
+
 ######################To switch to the AzureResourceManager module, use Switch-AzureMode
 Switch-AzureMode -Name AzureResourceManager
 

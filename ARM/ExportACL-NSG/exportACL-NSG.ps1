@@ -17,6 +17,8 @@ foreach ($sub in $SubscriptionNames)
         $vmlist = Get-AzureRMVM
         foreach ($vm in $vmlist)
         {
+            Write-Output "Processing " $vm.Name
+
             #Get Azure ARM VM NICs
             $NicsCount = $vm.NetworkProfile.NetworkInterfaces.Count
 
@@ -102,6 +104,8 @@ foreach ($sub in $SubscriptionNames)
 
     foreach($vm in $vmlist)
     {
+        Write-Output "Processing " $vm.Name
+
         #get the endpoints for this VM
         $Port = Get-AzureEndpoint -vm $vm 
 
