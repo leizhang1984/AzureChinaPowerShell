@@ -1,4 +1,4 @@
-#Created By MSFT leizhang (leizha@microsoft.com) on July 13th, 2017
+#Created By MSFT leizhang (leizha@microsoft.com) on Sep 13th, 2017
 
 Clear-AzureProfile -Force
 
@@ -32,8 +32,7 @@ foreach ($sub in $SubscriptionNames)
                 $output | add-member -Membertype NoteProperty -Name "VMSize" -value "$($vm.HardwareProfile.VmSize)"
                 $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
 
-                $logarray += $output 
-                #add the current machinename, port and ACL to the array.               
+                $logarray += $output               
         }
   }
 
@@ -67,7 +66,7 @@ foreach ($sub in $SubscriptionNames)
             $output | add-member -Membertype NoteProperty -Name "VMSize" -value "$($vm.InstanceSize)"
             $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
                
-            $logarray += $output #add the current machinename, port and ACL to the array.
+            $logarray += $output
     }
 }
 
