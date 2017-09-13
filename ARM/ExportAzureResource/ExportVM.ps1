@@ -27,6 +27,9 @@ foreach ($sub in $SubscriptionNames)
                 $output | add-member -Membertype NoteProperty -Name "SubscriptioName" -value "$($sub.Name)"
                 $output | add-member -Membertype NoteProperty -Name "ResourceGroupName" -value "$($vm.ResourceGroupName)"
                 $output | add-member -Membertype NoteProperty -Name "VMName" -value "$($vm.Name)"
+                $output | add-member -Membertype NoteProperty -Name "OSType" -value "$($vm.StorageProfile.OsDisk.OsType)"
+                
+                $output | add-member -Membertype NoteProperty -Name "VMSize" -value "$($vm.HardwareProfile.VmSize)"
                 $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
 
                 $logarray += $output 
@@ -59,6 +62,9 @@ foreach ($sub in $SubscriptionNames)
             $output | add-member -Membertype NoteProperty -Name "SubscriptioName" -value $sub.SubscriptionName
             $output | add-member -Membertype NoteProperty -Name "ResourceGroupName" -value "ASM Default Resource Group"
             $output | add-member -Membertype NoteProperty -Name "VMName" -value "$($vm.name)"
+            $output | add-member -Membertype NoteProperty -Name "OSType" -value "$($vm.VM.OSVirtualHardDisk.OS)"
+
+            $output | add-member -Membertype NoteProperty -Name "VMSize" -value "$($vm.InstanceSize)"
             $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
                
             $logarray += $output #add the current machinename, port and ACL to the array.
