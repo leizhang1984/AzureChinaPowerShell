@@ -38,14 +38,17 @@ Version : 1.05
 
 [CmdletBinding()]
 Param(
-  [Parameter(Mandatory=$True,Position=1)]
-   [string]$VmName,
-	
-   [Parameter(Mandatory=$True,Position=3)]
-   [string]$AvailabilitySetName,
+   [Parameter(Mandatory=$True,Position=1)]
+   [string]$SubscriptionName,
 
    [Parameter(Mandatory=$True,Position=2)]
-   [string]$ResourceGroup
+   [string]$ResourceGroup,
+
+   [Parameter(Mandatory=$True,Position=3)]
+   [string]$VmName,
+
+   [Parameter(Mandatory=$True,Position=4)]
+   [string]$AvailabilitySetName
 )
 
 
@@ -226,8 +229,11 @@ $AzureAccount = RunLog-Command -Description $Description -Command $Command -LogF
 ##Select the Subscription##
 ##Login to Azure##
 $Description = "Selecting the Subscription : $Subscription"
-$Command = {Get-AzureRmSubscription | Out-GridView -PassThru | Select-AzureRmSubscription}
-RunLog-Command -Description $Description -Command $Command -LogFile $LogFile
+#$Command = {Get-AzureRmSubscription | Out-GridView -PassThru | Select-AzureRmSubscription}
+
+Select-AzureRmSubscription -SubscriptionName $SubscriptionName
+
+#RunLog-Command -Description $Description -Command $Command -LogFile $LogFile
 
 
 #Validate Input
