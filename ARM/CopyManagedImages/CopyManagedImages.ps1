@@ -4,7 +4,7 @@
 Add-AzureRMAccount -Environment AzureChinaCloud
 
 #这里修改为，源订阅ID
-$sourceSubscriptionId =  '6368aa73-6ef4-492f-903e-f44b01b11a9a'
+$sourceSubscriptionId =  '[订阅ID]'
 
 Select-AzureRmSubscription -SubscriptionId $sourceSubscriptionId
 
@@ -48,7 +48,7 @@ $snapSasUrl = Grant-AzureRmSnapshotAccess -ResourceGroupName $resourceGroupName 
 Add-AzureRMAccount -Environment AzureChinaCloud
 
 #这里修改为，目标订阅ID
-$destSubscriptionId =  'e2eaa986-29d9-48c9-8302-1e2900a4504b'
+$destSubscriptionId =  '[订阅ID]'
 
 Select-AzureRmSubscription -SubscriptionId $destSubscriptionId
 
