@@ -1,19 +1,19 @@
 #开机脚本
 
 #设置用户名密码
-$userName = "admin@robertgao.partner.onmschina.cn"
+$userName = "[YourOrgID]"
 
 #设置密码
 $securePassword = ConvertTo-SecureString -String "[Azure密码]" -AsPlainText -Force
 
 #设置订阅名称
-$subscriptionName= 'KFC Delivery2.0'
+$subscriptionName= '[YourSubscription]'
 
 #设置需要开机的虚拟机名称，以分号分隔
-$VMNamesArray='BasicBJVM01;BasicBJVM02;ConnectionBJVM01'
+$VMNamesArray='VM01;VM02;VM03'
 
 #资源组名称
-$ResourceGroupName='ProdBJ'
+$ResourceGroupName='YourResourceGroupName'
 
 $cred = New-Object System.Management.Automation.PSCredential($userName, $securePassword)
 
