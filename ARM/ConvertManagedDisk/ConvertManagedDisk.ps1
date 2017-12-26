@@ -23,7 +23,6 @@ $avSet.PlatformFaultDomainCount = 2
 #更新
 Update-AzureRmAvailabilitySet -AvailabilitySet $avSet -Sku Aligned
 
-
 $avSet = Get-AzureRmAvailabilitySet -ResourceGroupName $rgName -Name $avSetName
 
 foreach($vmInfo in $avSet.VirtualMachinesReferences)
@@ -37,6 +36,7 @@ foreach($vmInfo in $avSet.VirtualMachinesReferences)
   Start-AzureRmVM -ResourceGroupName $rgName -Name $vm.Name
 }
 
+
 #如果我们想查看Managed Disk的URL，可以执行下面的命令
 foreach($vmInfo in $avSet.VirtualMachinesReferences)
 {
@@ -46,4 +46,7 @@ foreach($vmInfo in $avSet.VirtualMachinesReferences)
   
   $mdiskURL = Grant-AzureRmDiskAccess -ResourceGroupName $rgName -DiskName $vm.StorageProfile.OsDisk.Name -Access Read -DurationInSecond 3600
   Write-Output($mdiskURL)
+  
+   #然后开机
+  #Start-AzureRmVM -ResourceGroupName $rgName -Name $vm.Name
 }
