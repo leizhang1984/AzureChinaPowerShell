@@ -29,17 +29,21 @@ $avSet = Get-AzureRmAvailabilitySet -ResourceGroupName $rgName -Name $avSetName
 foreach($vmInfo in $avSet.VirtualMachinesReferences)
 {
   $vm = Get-AzureRmVM -ResourceGroupName $rgName | Where-Object {$_.Id -eq $vmInfo.id}
+  #需要在关机下执行
   Stop-AzureRmVM -ResourceGroupName $rgName -Name $vm.Name -Force
   ConvertTo-AzureRmVMManagedDisk -ResourceGroupName $rgName -VMName $vm.Name
+  
+  #然后开机
   Start-AzureRmVM -ResourceGroupName $rgName -Name $vm.Name
 }
 
-
-
-
-
-
-
-
-
-
+#如果我们想查看Managed Disk的URL，可以执行下面的命令
+foreach($vmInfo in $avSet.VirtualMachinesReferences)
+{
+  $vm = Get-AzureRmVM -ResourceGroupName $rgName | Where-Object {$_.Id -eq $vmInfo.id}
+  #需要在关机下执行
+  Stop-AzureRmVM -ResourceGroupName $rgName -Name $vm.Name -Force
+  
+  $mdiskURL = Grant-AzureRmDiskAccess -ResourceGroupName $rgName -DiskName $vm.StorageProfile.OsDisk.Name -Access Read -DurationInSecond 3600
+  Write-Output($mdiskURL)
+}
