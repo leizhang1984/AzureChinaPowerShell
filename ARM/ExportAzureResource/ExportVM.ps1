@@ -32,6 +32,17 @@ foreach ($sub in $SubscriptionNames)
                 $output | add-member -Membertype NoteProperty -Name "VMSize" -value "$($vm.HardwareProfile.VmSize)"
                 $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
 
+                if($vm.AvailabilitySetReference.Id)
+                {
+                    $avSetName = $vm.AvailabilitySetReference.Id.Split("/")[-1]
+                }
+                else
+                {
+                    $avSetName = "NULL"
+                }
+
+                $output | add-member -Membertype NoteProperty -Name "AvailabilitySetName" -value "$($avSetName)"
+
                 $logarray += $output               
         }
   }
@@ -65,6 +76,7 @@ foreach ($sub in $SubscriptionNames)
 
             $output | add-member -Membertype NoteProperty -Name "VMSize" -value "$($vm.InstanceSize)"
             $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
+			$output | add-member -Membertype NoteProperty -Name "AvailabilitySetName" -value "$($vm.AvailabilitySetName)"			
                
             $logarray += $output
     }
