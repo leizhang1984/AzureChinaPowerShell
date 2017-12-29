@@ -20,7 +20,8 @@ foreach ($sub in $SubscriptionNames)
         foreach ($vm in $vmlist)
         {   
                 #Get VM Status
-                $vmstatus = (get-azurermvm -ResourceGroupName $vm.ResourceGroupName -Name $vm.Name -Status).Statuses.DisplayStatus[1]
+                $vmStatus = Get-AzureRMVM -ResourceGroupName $vm.ResourceGroupName -Name $vm.Name -Status
+                $displayStatus = $vmStatus.Statuses.DisplayStatus[1]
 
                 $output = new-object PSObject
                 $output | add-member -Membertype NoteProperty -Name "Mode" -value "ARM"
@@ -30,8 +31,9 @@ foreach ($sub in $SubscriptionNames)
                 $output | add-member -Membertype NoteProperty -Name "OSType" -value "$($vm.StorageProfile.OsDisk.OsType)"
                 
                 $output | add-member -Membertype NoteProperty -Name "VMSize" -value "$($vm.HardwareProfile.VmSize)"
-                $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
-
+                $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($displayStatus)"
+                
+                #Availability Set
                 if($vm.AvailabilitySetReference.Id)
                 {
                     $avSetName = $vm.AvailabilitySetReference.Id.Split("/")[-1]
@@ -40,8 +42,41 @@ foreach ($sub in $SubscriptionNames)
                 {
                     $avSetName = "NULL"
                 }
-
                 $output | add-member -Membertype NoteProperty -Name "AvailabilitySetName" -value "$($avSetName)"
+
+                #
+                $isCustomerInitiatedMaintenanceAllowed = "False"
+                $preMaintenanceWindowStartTime = "NULL"
+                $preMaintenanceWindowEndTime = "NULL"
+
+                $maintenanceWindowStartTime = "NULL"
+                $maintenanceWindowEndTime = "NULL"
+
+                $lastOperationResultCode = "NULL"
+                $lastOperationMessage = "NULL"
+  
+                if($vmStatus.MaintenanceRedeployStatus)
+                {
+                   $isCustomerInitiatedMaintenanceAllowed= $vmStatus.MaintenanceRedeployStatus.IsCustomerInitiatedMaintenanceAllowed
+                   $preMaintenanceWindowStartTime= $vmStatus.MaintenanceRedeployStatus.PreMaintenanceWindowStartTime
+                   $preMaintenanceWindowEndTime= $vmStatus.MaintenanceRedeployStatus.PreMaintenanceWindowEndTime
+
+                   $maintenanceWindowStartTime= $vmStatus.MaintenanceRedeployStatus.MaintenanceWindowStartTime
+                   $maintenanceWindowEndTime= $vmStatus.MaintenanceRedeployStatus.MaintenanceWindowEndTime
+
+                   $lastOperationResultCode= $vmStatus.MaintenanceRedeployStatus.LastOperationResultCode
+                   $lastOperationMessage= $vmStatus.MaintenanceRedeployStatus.LastOperationMessage 
+                }
+
+                $output | add-member -Membertype NoteProperty -Name "IsCustomerInitiatedMaintenanceAllowed" -value "$($IsCustomerInitiatedMaintenanceAllowed)"
+                $output | add-member -Membertype NoteProperty -Name "PreMaintenanceWindowStartTime" -value "$($PreMaintenanceWindowStartTime)"
+                $output | add-member -Membertype NoteProperty -Name "PreMaintenanceWindowEndTime" -value "$($PreMaintenanceWindowEndTime)"
+
+                $output | add-member -Membertype NoteProperty -Name "MaintenanceWindowStartTime" -value "$($MaintenanceWindowStartTime)"
+                $output | add-member -Membertype NoteProperty -Name "MaintenanceWindowEndTime" -value "$($MaintenanceWindowEndTime)"
+
+                $output | add-member -Membertype NoteProperty -Name "LastOperationResultCode" -value "$($LastOperationResultCode)"
+                $output | add-member -Membertype NoteProperty -Name "LastOperationMessage" -value "$($LastOperationMessage)"
 
                 $logarray += $output               
         }
@@ -77,7 +112,18 @@ foreach ($sub in $SubscriptionNames)
             $output | add-member -Membertype NoteProperty -Name "VMSize" -value "$($vm.InstanceSize)"
             $output | add-member -Membertype NoteProperty -Name "VMStatus" -value "$($vmstatus)"
 			$output | add-member -Membertype NoteProperty -Name "AvailabilitySetName" -value "$($vm.AvailabilitySetName)"			
-               
+            
+            # ASM VM Maintenance Value is EMPTY
+            $output | add-member -Membertype NoteProperty -Name "IsCustomerInitiatedMaintenanceAllowed" -value "$($IsCustomerInitiatedMaintenanceAllowed)"
+            $output | add-member -Membertype NoteProperty -Name "PreMaintenanceWindowStartTime" -value "$($PreMaintenanceWindowStartTime)"
+            $output | add-member -Membertype NoteProperty -Name "PreMaintenanceWindowEndTime" -value "$($PreMaintenanceWindowEndTime)"
+
+            $output | add-member -Membertype NoteProperty -Name "MaintenanceWindowStartTime" -value "$($MaintenanceWindowStartTime)"
+            $output | add-member -Membertype NoteProperty -Name "MaintenanceWindowEndTime" -value "$($MaintenanceWindowEndTime)"
+
+            $output | add-member -Membertype NoteProperty -Name "LastOperationResultCode" -value "$($LastOperationResultCode)"
+            $output | add-member -Membertype NoteProperty -Name "LastOperationMessage" -value "$($LastOperationMessage)"
+
             $logarray += $output
     }
 }
