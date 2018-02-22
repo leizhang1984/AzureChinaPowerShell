@@ -25,7 +25,8 @@ $VMNames = $VMNamesArray -split ";"
 
 Foreach ($VMName in $VMNames) 
 {
-	$VM= Get-AzureRMVM | Where-Object {($_.ResourceGroupName -eq $ResourceGroupName) -and ($_.Name -eq $VMName)}
+	
+    $VM= Get-AzureRMVM | Where-Object {($_.ResourceGroupName -eq $ResourceGroupName) -and ($_.Name -eq $VMName)}
     
     #ÅÐ¶ÏVMÊÇ·ñ´æÔÚ
     if($VM)
@@ -39,7 +40,7 @@ Foreach ($VMName in $VMNames)
             if($vmStatus -eq 'VM deallocated')
             {
                 "Start VM Name " +  $VM.Name
-                Start-AzureRMVM -ResourceGroupName  -Name $VM.Name -ResourceGroupName $vm.ResourceGroupName  -Verbose -Force 
+                Start-AzureRMVM -ResourceGroupName $vm.ResourceGroupName -Name $VM.Name -Verbose 
             }
     }
     else
