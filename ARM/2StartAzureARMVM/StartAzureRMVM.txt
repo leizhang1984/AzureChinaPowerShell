@@ -31,7 +31,7 @@ Foreach ($VMName in $VMNames)
     #ÅÐ¶ÏVMÊÇ·ñ´æÔÚ
     if($VM)
     {
-            "VM Name " + $VM.Name + " is Existing in Resource Group " + $ResourceGroupName
+            #"VM Name " + $VM.Name + " is Existing in Resource Group " + $ResourceGroupName
 
             #Get VM Status
             $vmStatus = (Get-AzureRMVM -ResourceGroupName $VM.ResourceGroupName -Name $VM.Name -Status).Statuses.DisplayStatus[1]
