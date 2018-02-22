@@ -1,4 +1,4 @@
-#开机脚本
+#开机脚本  leizha@microsoft.com
 
 #设置用户名密码
 $userName = "[YourOrgID]"
@@ -23,6 +23,7 @@ Select-AzureRmSubscription -SubscriptionName $subscriptionName | Select-AzureRmS
 
 $VMNames = $VMNamesArray -split ";"
 
+$jobs = @()
 Foreach ($VMName in $VMNames) 
 {
 	

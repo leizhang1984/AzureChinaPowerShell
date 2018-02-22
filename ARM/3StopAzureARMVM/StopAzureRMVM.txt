@@ -9,7 +9,7 @@ $securePassword = ConvertTo-SecureString -String "[Azure密码]" -AsPlainText -For
 #设置订阅名称
 $subscriptionName= '[YourSubscription]'
 
-#设置需要关机的虚拟机名称，以分号分隔
+#设置需要开机的虚拟机名称，以分号分隔
 $VMNamesArray='VM01;VM02;VM03'
 
 #资源组名称
@@ -23,6 +23,7 @@ Select-AzureRmSubscription -SubscriptionName $subscriptionName | Select-AzureRmS
 
 $VMNames = $VMNamesArray -split ";"
 
+$jobs = @()
 Foreach ($VMName in $VMNames) 
 {
 	
@@ -39,7 +40,7 @@ Foreach ($VMName in $VMNames)
             #判断VM的开关机状态
             if($vmStatus -eq 'VM running')
             {
-		$jobs += Stop-AzureRMVM -ResourceGroupName $vm.ResourceGroupName -Name $VM.Name -ErrorAction Continue -asJob
+		$jobs += Stop-AzureRMVM -ResourceGroupName $vm.ResourceGroupName -Name $VM.Name -Force -asJob
             }
     }
     else
