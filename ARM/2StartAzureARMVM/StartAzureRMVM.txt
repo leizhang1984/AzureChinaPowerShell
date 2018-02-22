@@ -40,7 +40,6 @@ Foreach ($VMName in $VMNames)
             if($vmStatus -eq 'VM deallocated')
             {
 		$jobs += Start-AzureRMVM -ResourceGroupName $vm.ResourceGroupName -Name $VM.Name -ErrorAction Continue -asJob
-		
             }
     }
     else
