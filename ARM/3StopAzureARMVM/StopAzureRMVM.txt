@@ -1,0 +1,54 @@
+#关机脚本 leizha@microsoft.com
+
+#设置用户名密码
+$userName = "[YourOrgID]"
+
+#设置密码
+$securePassword = ConvertTo-SecureString -String "[Azure密码]" -AsPlainText -Force
+
+#设置订阅名称
+$subscriptionName= '[YourSubscription]'
+
+#设置需要关机的虚拟机名称，以分号分隔
+$VMNamesArray='VM01;VM02;VM03'
+
+#资源组名称
+$ResourceGroupName='YourResourceGroupName'
+
+$cred = New-Object System.Management.Automation.PSCredential($userName, $securePassword)
+
+Add-AzureRMAccount -Credential $cred -Environment AzureChinaCloud
+
+Select-AzureRmSubscription -SubscriptionName $subscriptionName | Select-AzureRmSubscription
+
+$VMNames = $VMNamesArray -split ";"
+
+Foreach ($VMName in $VMNames) 
+{
+	
+    $VM= Get-AzureRMVM | Where-Object {($_.ResourceGroupName -eq $ResourceGroupName) -and ($_.Name -eq $VMName)}
+    
+    #判断VM是否存在
+    if($VM)
+    {
+            #"VM Name " + $VM.Name + " is Existing in Resource Group " + $ResourceGroupName
+
+            #Get VM Status
+            $vmStatus = (Get-AzureRMVM -ResourceGroupName $VM.ResourceGroupName -Name $VM.Name -Status).Statuses.DisplayStatus[1]
+
+            #判断VM的开关机状态
+            if($vmStatus -eq 'VM running')
+            {
+		$jobs += Stop-AzureRMVM -ResourceGroupName $vm.ResourceGroupName -Name $VM.Name -ErrorAction Continue -asJob
+            }
+    }
+    else
+    {
+        "VM Name " +  $VM.Name + " is NOT Existing in Resource Group " + $ResourceGroupName + " Please check the configuration"
+    }
+}
+
+$jobs | Wait-Job | Remove-Job -Force
+
+"All VMs are Stopped"
+
