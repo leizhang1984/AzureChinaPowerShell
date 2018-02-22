@@ -39,8 +39,8 @@ Foreach ($VMName in $VMNames)
             #判断VM的开关机状态
             if($vmStatus -eq 'VM deallocated')
             {
-                "Start VM Name " +  $VM.Name
-                Start-AzureRMVM -ResourceGroupName $vm.ResourceGroupName -Name $VM.Name -Verbose 
+		$jobs += Start-AzureRMVM -ResourceGroupName $vm.ResourceGroupName -Name $VM.Name -ErrorAction Continue -asJob
+		
             }
     }
     else
@@ -48,6 +48,8 @@ Foreach ($VMName in $VMNames)
         "VM Name " +  $VM.Name + " is NOT Existing in Resource Group " + $ResourceGroupName + " Please check the configuration"
     }
 }
+
+$jobs | Wait-Job | Remove-Job -Force
 
 "All VMs are Started"
 
