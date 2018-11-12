@@ -1,0 +1,9 @@
+Add-AzureRmAccount -Environment AzureChinaCloud
+
+$subscriptionName='[ ‰»Î∂©‘ƒ√˚≥∆]'
+
+Select-AzureRmSubscription -SubscriptionName $subscriptionName
+
+$rgName='VMSS-East1'
+
+New-AzureRmResourceGroupDeployment -Name VMSSDeployment -ResourceGroupName $rgName -TemplateFile 'D:\Desktop\VMSS\vmssimge-customImage.json'

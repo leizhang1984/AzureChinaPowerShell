@@ -30,6 +30,11 @@ foreach($Sub in $Subs)
 }
 
 
+
+
+
+
+
 #####################################################
 #This is For Azure China
 
@@ -38,7 +43,17 @@ $securePassword = ConvertTo-SecureString -String "[YourPassword]" -AsPlainText -
  
 $cred = New-Object System.Management.Automation.PSCredential($userName, $securePassword)
 Add-AzureAccount -Credential $cred -Environment AzureChinaCloud
-Get-AzureSubscription
+
+
+
+
+
+
+
+
+
+
+
 
 
 ######################To switch to the AzureResourceManager module, use Switch-AzureMode
