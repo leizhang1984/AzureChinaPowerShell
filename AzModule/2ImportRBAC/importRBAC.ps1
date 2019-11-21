@@ -27,7 +27,7 @@ foreach ($rows in $p)
 {
         try
         {
-                Select-AzSubscription -SubscriptionName $rows.SubscriptioName
+                Select-AzSubscription -SubscriptionId $rows.SubscriptionId
                 #if($rows.RoleDefinitionName -notmatch ("ServiceAdministrator") -and $rows.RoleDefinitionName -notmatch ("AccountAdministrator"))
                 #{
                         New-AzRoleAssignment -SignInName $rows.SignInName -RoleDefinitionName $rows.RoleDefinitionName -Scope $rows.Scope
