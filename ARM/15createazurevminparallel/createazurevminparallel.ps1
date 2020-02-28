@@ -85,7 +85,7 @@ foreach ($rows in $p)
             $vmdiagStorage= Get-AzureRmStorageAccount -ResourceGroupName $rg.ResourceGroupName -Name $diagStorageAccountName
             if($vmdiagStorage -eq $null)
             { 
-                New-AzureRmStorageAccount -ResourceGroupName $rg.ResourceGroupName -Name $diagStorageAccountName -Location $location -SkuName Standard_LRS
+                New-AzureRmStorageAccount -ResourceGroupName $rg.ResourceGroupName -Name $diagStorageAccountName -Location $location -SkuName Standard_LRS -Kind StorageV2 -AccessTier Hot
                 $vmdiagStorage= Get-AzureRmStorageAccount -ResourceGroupName $rg.ResourceGroupName -Name $diagStorageAccountName
             }
 
