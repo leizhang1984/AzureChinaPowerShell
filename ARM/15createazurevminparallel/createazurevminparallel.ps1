@@ -99,7 +99,7 @@ foreach ($rows in $p)
 		
 		    #Get VM Image
 		    #$vmimage = Get-AzureRmVMImage -Location $location -PublisherName $publisher -Offer $offer -Skus $skus -Version $version
-		    $vmimages = Get-AzureRmVMImage -Location $location -PublisherName $publisher -Offer $offer -Skus $skus
+		    $vmimages = Get-AzureRmVMImage -Location $location -PublisherName $publisher -Offer $offer -Skus $skus | Sort-Object Version -Descending
 		    $vmimage = $vmimages[0]
             
 		    #Create Azure RM VM
