@@ -18,6 +18,7 @@ foreach ($sub in $SubscriptionNames)
         $output = new-object PSObject
         $output | add-member -Membertype NoteProperty -Name "DisplayName" -value "$($record.DisplayName)"
         $output | add-member -Membertype NoteProperty -Name "SignInName" -value "$($record.SignInName)"
+        $output | add-member -Membertype NoteProperty -Name "SubscriptionName" -value "$($sub.Name)"
         $output | add-member -Membertype NoteProperty -Name "RoleDefinitionName" -value "$($record.RoleDefinitionName)"
 
         $logarray += $output 
