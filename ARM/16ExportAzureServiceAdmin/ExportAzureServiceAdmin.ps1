@@ -21,9 +21,15 @@ foreach ($sub in $SubscriptionNames)
         $output | add-member -Membertype NoteProperty -Name "SubscriptionName" -value "$($sub.Name)"
         $output | add-member -Membertype NoteProperty -Name "RoleDefinitionName" -value "$($record.RoleDefinitionName)"
 
+        $result = Get-AzureRmRoleDefinition -Name $record.RoleDefinitionName
+        $output | add-member -Membertype NoteProperty -Name "Action" -value "$($result.Actions)"
+        $output | add-member -Membertype NoteProperty -Name "NotAction" -value "$($result.NotActions)"
+        $output | add-member -Membertype NoteProperty -Name "DataAction" -value "$($result.DataAction)"
+        $output | add-member -Membertype NoteProperty -Name "NotDataAction" -value "$($result.NotDataAction)"
+
         $logarray += $output 
     }
 }
 
-$logArray | convertto-Csv -NoTypeInformation | out-file D:\azure-Role.csv -append -Encoding utf8 
+$logArray | convertto-Csv -NoTypeInformation | out-file D:\azurerole.csv -append -Encoding utf8 
 Write-Output "Export Success, please check export file in Disk D:"

@@ -124,7 +124,10 @@ foreach ($rows in $p)
 		    elseif($os.ToLower() -eq "windows")
 		    {
                 #computer name max length is 15
-                $computerName = $computerName.Substring(0,15)
+                if($computerName.Length > 15)
+                {
+                    $computerName = $computerName.Substring(0,15)
+                }
 			    $vm = Set-AzureRmVMOperatingSystem -Windows -VM $vm -Credential $cred -ComputerName $computerName
 
                 #minimal Disk size for Linux is 127GB
