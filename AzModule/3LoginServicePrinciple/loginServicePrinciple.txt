@@ -1,0 +1,5 @@
+$azureAplicationId ="Empty"
+$azureTenantId= "Empty"
+$azurePassword = ConvertTo-SecureString "Empty" -AsPlainText -Force
+$psCred = New-Object System.Management.Automation.PSCredential($azureAplicationId , $azurePassword)
+Connect-AzAccount -Credential $psCred -TenantId $azureTenantId  -ServicePrincipal -Environment AzureChinaCloud
