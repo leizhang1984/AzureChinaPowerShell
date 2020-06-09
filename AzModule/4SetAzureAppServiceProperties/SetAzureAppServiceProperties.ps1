@@ -34,7 +34,10 @@ foreach ($sub in $SubscriptionNames)
 
 				#SetFunction AccessRestriction
 				Add-AzWebAppAccessRestrictionRule -ResourceGroupName $row.ResourceGroup -WebAppName $row.Name -Name SbuxIP -Priority 300 -Action Allow -IpAddress 167.220.255.103/32
-
+				
+				#https://github.com/MicrosoftDocs/azure-docs/issues/31095
+				#SCMIP do not support CLI/PowerShell
+				
 				#$row.SiteConfig.ScmIpSecurityRestrictionsUseMain=$true
                 $logarray += $output 
         }
