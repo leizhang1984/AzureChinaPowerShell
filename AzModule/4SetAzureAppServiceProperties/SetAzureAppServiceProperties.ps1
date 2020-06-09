@@ -37,8 +37,10 @@ foreach ($sub in $SubscriptionNames)
 				
 				#https://github.com/MicrosoftDocs/azure-docs/issues/31095
 				#SCMIP do not support CLI/PowerShell
-				
 				#$row.SiteConfig.ScmIpSecurityRestrictionsUseMain=$true
+				
+				
+				
                 $logarray += $output 
         }
     
