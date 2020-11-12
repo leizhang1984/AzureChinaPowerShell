@@ -29,7 +29,7 @@ foreach ($sub in $SubscriptionNames)
 
             $output = new-object PSObject
             $output | add-member -Membertype NoteProperty -Name "Mode" -value "ARM"
-            $output | add-member -Membertype NoteProperty -Name "SubscriptioName" -value "$sub.Name"
+            $output | add-member -Membertype NoteProperty -Name "SubscriptionName" -value "$sub.Name"
             $output | add-member -Membertype NoteProperty -Name "ResourceGroupName" -value "$($vm.ResourceGroupName)"
             $output | add-member -Membertype NoteProperty -Name "VMName" -value "$($vm.Name)"
             $output | add-member -Membertype NoteProperty -Name "OSType" -value "$($vm.StorageProfile.OsDisk.OsType)"
