@@ -3,7 +3,7 @@
 $logarray=@()
 
 #For ARM Mode
-Add-AzAccount -EnvironmentName AzureChinaCloud
+#Add-AzAccount -EnvironmentName AzureChinaCloud
 
 $SubscriptionNames = Get-AzSubscription
 
@@ -40,21 +40,30 @@ foreach ($sub in $SubscriptionNames)
             $output | add-member -Membertype NoteProperty -Name "PrivateIP" -value "$($NiCs.IpConfigurations[0].PrivateIpAddress)"
 
 
+            $tags = $vm.Tags
 
-            $output | add-member -Membertype NoteProperty -Name "Business" -value "$($VM.Tags.Business)"
-            $output | add-member -Membertype NoteProperty -Name "DetailPurpose" -value "$($VM.Tags.DetailPurpose)"
-            $output | add-member -Membertype NoteProperty -Name "Env" -value "$($VM.Tags.Env)"
-            $output | add-member -Membertype NoteProperty -Name "Name" -value "$($VM.Tags.Name)"
-            $output | add-member -Membertype NoteProperty -Name "Owner1" -value "$($VM.Tags.Owner1)"
+            if ($tags -ne $null) 
+            {
+                ForEach($tag in $tags.GetEnumerator())
+                {
+                     $output | add-member -Membertype NoteProperty -Name "$($tag.Key)" -value "$($tag.Value)"
+                }
+            }
 
-            $output | add-member -Membertype NoteProperty -Name "Owner2" -value "$($VM.Tags.Owner2)"
-            $output | add-member -Membertype NoteProperty -Name "Project" -value "$($VM.Tags.Project)"
-            $output | add-member -Membertype NoteProperty -Name "Region" -value "$($VM.Tags.Region)"
-            $output | add-member -Membertype NoteProperty -Name "Resource Group" -value "$($VM.Tags.Resource Group)"
-            $output | add-member -Membertype NoteProperty -Name "Snapshot" -value "$($VM.Tags.Snapshot)"
+            #$output | add-member -Membertype NoteProperty -Name "Business" -value "$($VM.Tags.Business)"
+            #$output | add-member -Membertype NoteProperty -Name "DetailPurpose" -value "$($VM.Tags.DetailPurpose)"
+            #$output | add-member -Membertype NoteProperty -Name "Env" -value "$($VM.Tags.Env)"
+            #$output | add-member -Membertype NoteProperty -Name "Name" -value "$($VM.Tags.Name)"
+            #$output | add-member -Membertype NoteProperty -Name "Owner1" -value "$($VM.Tags.Owner1)"
 
-            $output | add-member -Membertype NoteProperty -Name "Subscription" -value "$($VM.Tags.Subscription)"
-            $output | add-member -Membertype NoteProperty -Name "VNet" -value "$($VM.Tags.VNet)"
+            #$output | add-member -Membertype NoteProperty -Name "Owner2" -value "$($VM.Tags.Owner2)"
+            #$output | add-member -Membertype NoteProperty -Name "Project" -value "$($VM.Tags.Project)"
+            #$output | add-member -Membertype NoteProperty -Name "Region" -value "$($VM.Tags.Region)"
+            #$output | add-member -Membertype NoteProperty -Name "Resource Group" -value "$($VM.Tags.Resource Group)"
+            #$output | add-member -Membertype NoteProperty -Name "Snapshot" -value "$($VM.Tags.Snapshot)"
+
+            #$output | add-member -Membertype NoteProperty -Name "Subscription" -value "$($VM.Tags.Subscription)"
+            #$output | add-member -Membertype NoteProperty -Name "VNet" -value "$($VM.Tags.VNet)"
 
             $logarray += $output 
             #add the current machinename, port and ACL to the array.
