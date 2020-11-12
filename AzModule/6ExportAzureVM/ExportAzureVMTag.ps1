@@ -72,7 +72,7 @@ foreach ($sub in $SubscriptionNames)
 }
 
 #write the logarray to a CSV file.
-$logArray | convertto-Csv -NoTypeInformation | out-file D:\exportazurevm.csv -append -Encoding utf8 
+$logArray | convertto-Csv -NoTypeInformation | out-file D:\ExportAzureVMTag.csv -append -Encoding utf8 
 Write-Output "Export Success, please check azureacl file in Disk D:"
 
 
