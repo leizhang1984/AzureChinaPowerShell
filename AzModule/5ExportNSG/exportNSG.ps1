@@ -57,6 +57,7 @@ foreach ($sub in $SubscriptionNames)
                                 $output | add-member -Membertype NoteProperty -Name "RemoteSubnet" -value "$($Rule.SourceAddressPrefix)"
                                 $output | add-member -Membertype NoteProperty -Name "Description" -value  "$($Rule.Description)"
                                 $output | add-member -Membertype NoteProperty -Name "Permission" -value "$($Rule.Access)"
+                                $output | add-member -Membertype NoteProperty -Name "Tag" -value "$($vm.Tags)"
 
                                 $logarray += $output 
                                 #add the current machinename, port and ACL to the array.
@@ -84,6 +85,7 @@ foreach ($sub in $SubscriptionNames)
                             $output | add-member -Membertype NoteProperty -Name "RemoteSubnet" -value "*"
                             $output | add-member -Membertype NoteProperty -Name "Description" -value  "Open NSG to All Source IP"
                             $output | add-member -Membertype NoteProperty -Name "Permission" -value "permit"
+                            $output | add-member -Membertype NoteProperty -Name "Tag" -value "$($vm.Tags)"
 
                             $logarray += $output 
                             #add the current machinename, port and ACL to the array.
