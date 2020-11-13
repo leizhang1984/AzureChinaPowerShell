@@ -28,10 +28,22 @@ foreach ($rows in $p)
         try
         {
                 Select-AzSubscription -SubscriptionId $rows.SubscriptionId
-                #if($rows.RoleDefinitionName -notmatch ("ServiceAdministrator") -and $rows.RoleDefinitionName -notmatch ("AccountAdministrator"))
-                #{
-                        New-AzRoleAssignment -SignInName $rows.SignInName -RoleDefinitionName $rows.RoleDefinitionName -Scope $rows.Scope
-                #}
+                if($rows.ObjectType -eq "ServicePrincipal")
+                {
+                    $objId = Get-AzADServicePrincipal -SearchString $rows.DisplayName      	
+                }
+                elseif ($rows.ObjectType -eq "Group")
+                {
+                    $objId = Get-AzADGroup -SearchString $rows.DisplayName
+                }
+                elseif ($rows.ObjectType -eq "User")
+                {
+                     $objId = Get-AzADUser -SearchString $rows.DisplayName
+                }
+                if ($objId -ne $null) 
+                {
+                    New-AzRoleAssignment -ObjectId $objId.Id -RoleDefinitionName $rows.RoleDefinitionName -Scope $rows.Scope
+                }
         }
         Catch
         {
