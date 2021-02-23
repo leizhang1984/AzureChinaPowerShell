@@ -1,0 +1,2 @@
+﻿SubscriptionId,VMName,ComputerName,Location,VMSize,OS,Publisher,Offer,SKUs,Version,VMUsername,VMPassword,VMRG,DiagStorageAccountName,VirtualNetworkName,VNetRG,SubnetNumber,OSDiskSKU,OSDiskSizeInGB,DataDiskSKU,DataDiskSizeInGB,VMAvailabilitySetName
+c0c4d3b8-2905-4e1d-b08c-38a83d30ada2,VDIVM01,VDIVM01,chinaeast2,Standard_D2s_V3,Windows,MicrosoftWindowsDesktop,windows-10-1909-vhd-client-prod-stage,19h2-pro-zh-cn,latest,azureadmin,Xixihaha#123456,vm-rg,leistoragediag01,leivnet,VDIVM-RG,0,Premium_LRS,127,Premium_LRS,100,VDI_avbset
