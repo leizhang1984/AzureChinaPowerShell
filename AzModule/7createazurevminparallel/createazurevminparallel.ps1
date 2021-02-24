@@ -4,7 +4,7 @@
 
 #Read CSV file
 #This CSV file MUST HAVE following Column
-#SubscriptionId	VMName	ComputerName	Location	VMSize	OS	Publisher	Offer	SKUs	Version	VMUsername	VMPassword	VMRG	DiagStorageAccountName	VirtualNetworkName	VNetRG	SubnetNumber	OSDiskSKU	OSDiskSizeInGB	DataDiskSKU	DataDiskSizeInGB	VMAvailabilitySetName
+#SubscriptionId	VMName	ComputerName	Location	VMSize	OS	Publisher	Offer	SKUs	Version	VMUsername	VMPassword	VMRG	DiagStorageAccountName	VirtualNetworkName	VNetRG	SubnetName	OSDiskSKU	OSDiskSizeInGB	DataDiskSKU	DataDiskSizeInGB	VMAvailabilitySetName
 
 #Please create one Azure resouce Group (including Vitual Network and one subnet) before running this powershell script
 #This powershell script will create VM in one resource group and seperate for Virtual network resource group
@@ -13,6 +13,7 @@
 
 #Please modify CSV path first
 $csvpath = "C:\importvm.csv"
+
 
 #Start to Process CSV File
 $p = Import-Csv -Path $csvpath
@@ -47,7 +48,7 @@ foreach ($rows in $p)
 		    $diagStorageAccountName = $rows.DiagStorageAccountName.Trim()
 		    $vNetName = $rows.VirtualNetworkName.Trim()
 		    $vNetRG = $rows.VNetRG.Trim()
-		    $subnetNumber = $rows.SubnetNumber.Trim()
+		    $subnetName = $rows.SubnetName.Trim()
 			
 		    $osDiskSKU = $rows.OSDiskSKU.Trim()
 		    $osDiskSizeInGB = $rows.OSDiskSizeInGB.Trim()
@@ -91,7 +92,11 @@ foreach ($rows in $p)
 
 		    #Create NIC
             $nicname = $vmName + "-nic01"
-		    $nic1 = New-AzNetworkInterface -Name $nicname -ResourceGroupName $rg.ResourceGroupName -Location $location -SubnetId $vnet.Subnets[$subnetNumber].Id
+
+            #Get subnet by name
+            $subnet = Get-AzVirtualNetworkSubnetConfig -Name $subnetName -VirtualNetwork $vnet 
+
+		    $nic1 = New-AzNetworkInterface -Name $nicname -ResourceGroupName $rg.ResourceGroupName -Location $location -SubnetId $subnet.Id
 		    $nic = get-Aznetworkinterface -name $nicname -resourcegroupname $rg.resourcegroupname
 		    $nic.IpConfigurations[0].privateipallocationmethod = "static"
 		    $nic1 = Set-AzNetworkInterface -NetworkInterface $nic
@@ -104,7 +109,7 @@ foreach ($rows in $p)
             
 		    #Create Azure RM VM
 		    $vm = New-AzVMConfig -VMName $vmName -VMSize $vmSize -AvailabilitySetId $as.Id
-		    $vm = Set-AzVMBootDiagnostics -VM $vm -ResourceGroupName $rg.ResourceGroupName -StorageAccountName $diagStorageAccountName -Enable
+		    $vm = Set-AzVMBootDiagnostic -VM $vm -ResourceGroupName $rg.ResourceGroupName -StorageAccountName $diagStorageAccountName -Enable
 		
             #Username and Password
             $securePassword = ConvertTo-SecureString -String $VMPassword -AsPlainText -Force
