@@ -1,0 +1,3 @@
+﻿subscriptionid,rgname,firwallname,rulecollectionename,priority,action,rulename,protocol,sourceaddress,destinationaddress,destinationports
+99deefb2-9571-41a1-826d-54d23b044abc,fw-rg,azurefirewall,blacklist,100,Deny,blacklist-inbound-2,TCP,"80.82.70.168,183.252.177.2",*,*
+99deefb2-9571-41a1-826d-54d23b044abc,fw-rg,azurefirewall,blacklist,100,Deny,blacklist-outbound-2,TCP,*,"80.82.70.168,183.252.177.2",*
