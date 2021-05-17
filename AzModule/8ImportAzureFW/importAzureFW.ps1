@@ -50,7 +50,7 @@ foreach ($rows in $p)
 
             $Azfw = Get-AzFirewall -ResourceGroupName $RGName -Name $FWName
 
-            #Èç¹ûFW´æÔÚ
+            #if firewall is exist
             if($Azfw -ne $null)
             {
                 #Query Azure Rules Collection By Name
