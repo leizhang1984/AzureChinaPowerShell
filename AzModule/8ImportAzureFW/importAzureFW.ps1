@@ -50,9 +50,21 @@ foreach ($rows in $p)
 
             $Azfw = Get-AzFirewall -ResourceGroupName $RGName -Name $FWName
 
-            #如果不为空
+            #如果FW存在
             if($Azfw -ne $null)
             {
+                #Query Azure Rules Collection By Name
+                #$queryCollectionName = $Azfw.NetworkRuleCollections | Where-Object {$_.Name -eq $CollectionName}
+
+                $queryCollectionName = $Azfw.GetNetworkRuleCollectionByName($CollectionName)
+                
+                if($queryCollectionName.Count -gt 0)
+                {
+                    #Collection Name is exists, then delete it.
+                    $Azfw.RemoveNetworkRuleCollectionByName($CollectionName)
+
+                }
+
                 if($i -eq 0)
                 {
                     
@@ -74,7 +86,7 @@ foreach ($rows in $p)
                     $Azfw.NetworkRuleCollections.Add($NetRuleCollection)
                     Set-AzFirewall -AzureFirewall $Azfw
 
-                    write-host "更新防火墙成功！！！"      
+                    write-host "Update Azure Firewall Rules successfully！！！"      
             }
         }
       
