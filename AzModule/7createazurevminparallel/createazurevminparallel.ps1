@@ -151,9 +151,10 @@ foreach ($rows in $p)
 		    #OS Disk
 		    $vm = Set-AzVMOSDisk -StorageAccountType $osDiskSKU -DiskSizeInGB $osDiskSizeInGB -VM $vm -CreateOption FromImage
 		    $vm = Add-AzVMNetworkInterface -VM $vm -id $nic1.Id
-		    $jobs += New-AzVM -ResourceGroupName $rg.resourcegroupname -Location $location -VM $vm -AsJob
+		    
+		    #$jobs += New-AzVM -ResourceGroupName $rg.resourcegroupname -Location $location -VM $vm -AsJob
+		    New-AzVM -ResourceGroupName $rg.resourcegroupname -Location $location -VM $vm -AsJob
 
-            #New-AzVM -ResourceGroupName $rg.resourcegroupname -Location $location -VM $vm
 		
             write-host "Start creating "$vmName
         }
@@ -217,7 +218,9 @@ foreach ($rows in $p)
 		
 		    $vm = Get-AzVM -Name $vmName -ResourceGroupName $rg.resourcegroupname
 		    $vm = Add-AzVMDataDisk -CreateOption Attach -Lun 0 -VM $vm -ManagedDiskId $disk.Id
-            $jobs += Update-AzVM -VM $vm -ResourceGroupName $rg.resourcegroupname -AsJob
+            #$jobs += Update-AzVM -VM $vm -ResourceGroupName $rg.resourcegroupname -AsJob
+
+            Update-AzVM -VM $vm -ResourceGroupName $rg.resourcegroupname -AsJob
             
             write-host "Start attach Data Disk for VM "$vmName
         }
