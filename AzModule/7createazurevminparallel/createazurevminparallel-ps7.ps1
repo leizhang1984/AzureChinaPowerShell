@@ -21,15 +21,14 @@ $csvpath = "d:\importvm.csv"
 $p = Import-Csv -Path $csvpath
 
 #Login to Azure China
-Add-AzAccount -Environment AzureChinaCloud
+#Add-AzAccount -Environment AzureChinaCloud
 
 #For Analysis
 $startVMTime = Get-Date
 $startTotalTime = $startVMTime
 
-Import-Csv -Path $csvpath  | Foreach-Object -parallel
+Import-Csv -Path $csvpath  | Foreach-Object -parallel {
 #foreach ($rows in $p) 
-{
         try
         {  
             $SubscriptionId = $_.SubscriptionId.Trim()
@@ -216,9 +215,8 @@ Write-Host "Start to Attach Data Disk"
 #Due to Create Azure VM in Parallell,we cannot attached data disk immediately due to VM is under creating
 #$jobs = @()
 
-Import-Csv -Path $csvpath  | Foreach-Object -parallel 
-#foreach ($rows in $p)
-{
+Import-Csv -Path $csvpath  | Foreach-Object -parallel {
+#foreach ($rows in $p) {
         try
         {
             $SubscriptionId = $_.SubscriptionId.Trim()
