@@ -3,7 +3,7 @@
 $logarray=@()
 
 #For ARM Mode
-#Add-AzAccount -EnvironmentName AzureChinaCloud
+Add-AzAccount -EnvironmentName AzureChinaCloud
 
 $SubscriptionNames = Get-AzSubscription
 
