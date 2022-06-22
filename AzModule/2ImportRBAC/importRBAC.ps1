@@ -1,4 +1,5 @@
 #Created By MSFT leizhang (leizha@microsoft.com) on Nov 20th, 2019
+#Updated 2022-06-22
 
 #login in to Azure
 Connect-AzAccount -Environment AzureChinaCloud
@@ -19,7 +20,7 @@ Connect-AzAccount -Environment AzureChinaCloud
 #WARNING: Please Modity Column DisplayName and SingInName if necessary
 
 #Please modify CSV path first
-$csvpath = "D:\export_rbac.csv"
+$csvpath = $pwd.Path + "\export_rbac.csv"
 
 #Start to Process CSV File
 $P = Import-Csv -Path $csvpath
@@ -30,15 +31,15 @@ foreach ($rows in $p)
                 Select-AzSubscription -SubscriptionId $rows.SubscriptionId
                 if($rows.ObjectType -eq "ServicePrincipal")
                 {
-                    $objId = Get-AzADServicePrincipal -SearchString $rows.DisplayName      	
+                    $objId = Get-AzADServicePrincipal -DisplayName $rows.DisplayName      	
                 }
                 elseif ($rows.ObjectType -eq "Group")
                 {
-                    $objId = Get-AzADGroup -SearchString $rows.DisplayName
+                    $objId = Get-AzADGroup -DisplayName $rows.DisplayName
                 }
                 elseif ($rows.ObjectType -eq "User")
                 {
-                     $objId = Get-AzADUser -SearchString $rows.DisplayName
+                     $objId = Get-AzADUser -ObjectId $rows.SignInName
                 }
                 if ($objId -ne $null) 
                 {
