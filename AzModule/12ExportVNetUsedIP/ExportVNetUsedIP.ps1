@@ -24,6 +24,12 @@ foreach ($sub in $subs)
             $output | add-member -Membertype NoteProperty -Name "VNet Name" -value $vnet.Name
             $output | add-member -Membertype NoteProperty -Name "Subnet Name" -value $subnetName.ToString()
 
+            # $output | add-member -Membertype NoteProperty -Name "Subnet CIDR" -value  $subnet.AddressPrefix will export collection() in excel sheet 
+            # I don't know why 
+            # so I have to use this stupid $cidr parameter
+            $cidr =  $subnet.AddressPrefix.Split("/")[0] + "/" + $subnet.AddressPrefix.Split("/")[1]
+            $output | add-member -Membertype NoteProperty -Name "Subnet CIDR" -value  $cidr
+
             $output | add-member -Membertype NoteProperty -Name "Total Private IP" -value $netmaskLength.ToString()
             $output | add-member -Membertype NoteProperty -Name "Used Private IP" -value $subnet.IpConfigurations.Count  
             $output | add-member -Membertype NoteProperty -Name "Available Private IP" -value $availableIpAddresses.ToString()
@@ -31,7 +37,7 @@ foreach ($sub in $subs)
          }
     }
 }
-
-$csvpath = $pwd.Path + "\export_vnetprivateips.csv"
+$today = Get-Date -Format "yyyy-MM-dd"
+$csvpath = $pwd.Path + "\" + $today + "export_vnetprivateips.csv"
 $logArray | convertto-Csv -NoTypeInformation | out-file $csvpath -append -Encoding utf8 
 Write-Output "Export VNet Private IP successfully"

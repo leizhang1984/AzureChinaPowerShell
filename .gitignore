@@ -301,3 +301,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+AzModule/12ExportVNetUsedIP/2023-07-05export_vnetprivateips.csv
