@@ -21,6 +21,7 @@ foreach ($sub in $SubscriptionNames)
         Write-Output "Processing " $sub.Name 
         
         $exports = Get-AzRoleAssignment 
+        #Get-AzRoleAssignment | Where-Object { $_.DisplayName -eq "abc" }
         
         foreach ($datarow in $exports)
         {
