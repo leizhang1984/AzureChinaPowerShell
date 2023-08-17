@@ -1,4 +1,4 @@
-﻿Add-AzAccount
+﻿#Add-AzAccount
 
 $logarray=@()
 

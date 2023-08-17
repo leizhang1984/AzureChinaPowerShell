@@ -1,14 +1,16 @@
-$subid = "[YourSubscroptionID]"
+#Install-Module Az.Quota
+
+$subid = "d7f49630-34b4-4321-a5fd-fda48b934d2c"
 $scope = "subscriptions/" + $subid + "/providers/Microsoft.Compute/locations/westus3"
 
 
-$currentVaule = 10000
-$requestvaule = 20000
-$step = 1000
+$currentVaule = 13300
+$requestvaule = 15000
+$step = 100
 $loopnum = ($requestvaule-$currentVaule)/$step
 
-$skuname = "standardESv5Family"
-#standardDv5Family,
+$skuname = "standardLSv3Family"
+#standardDv5Family,standardEASv4Family
 #Get-AzQuota -Scope $scope | Where-Object { $_.Name -eq "standardESv5Family" }
 
 #for ($i=1;$i -l $loopnum;$i++)
@@ -24,8 +26,6 @@ for($i=1; $i -le $loopnum; $i++)
     Start-Sleep -Seconds 30
     
     Write-Output "Sleeping end"
-    #if($result.
-
 }
 
 

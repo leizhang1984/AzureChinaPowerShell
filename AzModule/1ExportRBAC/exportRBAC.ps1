@@ -4,7 +4,8 @@
 $logarray=@()
 
 #login in to Azure
-Connect-AzAccount -Environment AzureChinaCloud
+#Connect-AzAccount -Environment AzureChinaCloud
+#Connect-AzAccount
 
 #Loop Subscriptions
 $SubscriptionNames = Get-AzSubscription
