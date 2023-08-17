@@ -1,6 +1,6 @@
 #Install-Module Az.Quota
 
-$subid = "d7f49630-34b4-4321-a5fd-fda48b934d2c"
+$subid = ""
 $scope = "subscriptions/" + $subid + "/providers/Microsoft.Compute/locations/westus3"
 
 
